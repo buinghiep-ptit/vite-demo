@@ -10,7 +10,8 @@
       // Lắng nghe thông điệp từ các iframe
       window.addEventListener("message", function (event) {
         console.log("messageListener:", event.origin);
-        if (event.origin !== "https://chatbotchang-sdk-dev.fstats.ai") return;
+        const org = "https://dev.fstats.ai";
+        if (!org.startsWith(event.origin)) return;
 
         const message = event.data;
         // Chuyển tiếp thông điệp đến iframe khác
