@@ -10,7 +10,7 @@
       // Lắng nghe thông điệp từ các iframe
       window.addEventListener("message", function (event) {
         console.log("messageListener:", event.origin);
-        const org = "http://hrai.fpt.net/ai-agent/sdk/";
+        const org = "https://hrai.fpt.net/ai-agent/sdk/";
         if (!org.startsWith(event.origin)) return;
 
         const message = event.data;
