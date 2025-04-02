@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + React + TS</title>
+
+    <script>
+      // Lắng nghe thông điệp từ các iframe
+      window.addEventListener("message", function (event) {
+        console.log("messageListener:", event.origin);
+        if (event.origin !== "https://chatbotchang-sdk-dev.fstats.ai") return;
+
+        const message = event.data;
+        // Chuyển tiếp thông điệp đến iframe khác
+
+        const chatIframe = document
+          .querySelector(".chatbot-dialog")
+          .querySelector("iframe");
+
+        const bubbleIframe = document
+          .querySelector(".chatbot-bubble")
+          .querySelector("iframe");
+
+        const targetFrame =
+          message.target === "chat-frame"
+            ? chatIframe?.contentWindow
+            : bubbleIframe?.contentWindow;
+
+        if (chatIframe && message.type === "INIT_CHAT") {
+          setTimeout(function () {
+            bubbleIframe.style.display = "block";
+          }, 1000);
+        }
+        if (chatIframe && message.type === "TOGGLE_CHAT") {
+          if (message.isOpen) {
+            chatIframe.classList.remove("chat-dialog-out");
+            chatIframe.classList.add("chat-dialog-in");
+            chatIframe.style.display = "block";
+          } else {
+            chatIframe.classList.remove("chat-dialog-in");
+            chatIframe.classList.add("chat-dialog-out");
+          }
+        }
+
+        targetFrame.postMessage(message, "*");
+      });
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
